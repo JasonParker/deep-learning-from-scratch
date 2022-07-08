@@ -27,6 +27,30 @@ def derivative(func: Callable[[ndarray], ndarray],
     return (func(input_ + delta) - func(input_ - delta)) / (2 * delta)
 
 
+def derivative_chain_rule(chain: List,
+                          input_range: ndarray) -> ndarray:
+    
+    outputs = []
+    for i in range(0, len(chain) - 1):
+        if i == 0:
+            outputs.append(chain[i](input_range))
+        else: outputs.append(chain[i](outputs[i - 1]))
+        
+    derivatives = []
+    for i in range(len(chain) - 1, -1 , -1):
+        if i == 0:
+            derivatives.append(derivative(chain[i], input_range))
+        else: derivatives.append(derivative(chain[i], outputs[i - 1]))
+        
+    for i in range(1, len(chain)):
+        if i == 1:
+            product = np.multiply(derivatives[i - 1], derivatives[i])
+        else:
+            product = np.multiply(product, derivatives[i])
+    
+    return product
+
+
 def elu_function(x: ndarray, slope: float) -> ndarray:
     '''
     Apply exponential linear unit function to each element in ndarray using
@@ -92,7 +116,7 @@ def square(x: ndarray) -> ndarray:
 
 def swish_function(x: ndarray) -> ndarray:
     '''
-    Apply swich function
+    Apply swish function
     '''
     return x/(1-np.exp(-x))
 
