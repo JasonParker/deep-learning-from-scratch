@@ -1,6 +1,6 @@
 import numpy as np
 from numpy import ndarray
-from typing import Callable
+from typing import Callable, List
 
 
 def binary_step_function(x: ndarray,
@@ -29,7 +29,11 @@ def derivative(func: Callable[[ndarray], ndarray],
 
 def derivative_chain_rule(chain: List,
                           input_range: ndarray) -> ndarray:
-    
+    """
+    Accepts an arbitrary list of functions (chain) along with an initial
+    array of inputs (input_range) and then calculates the derivative of the
+    full chain of functions for each of the input values.
+    """
     outputs = []
     for i in range(0, len(chain) - 1):
         if i == 0:
